@@ -1,41 +1,15 @@
-import fs from 'fs'
-import http from 'http'
+import { envs } from "./config/envs"
+import { Server } from "./presentation/server"
 
-const server = http.createServer((req, res) => {
+(async () => {
+    main()
+})()
 
-    console.log(req.url)
+function main() {
 
-    // res.writeHead(200, { 'content-type': 'text/html' })
-    // res.write('<h1>Hola mundo</h1>')
-    // res.end()
+    const server = new Server({
+        port: envs.PORT,
+        public_path: envs.PUBLIC_PATH
+    }).start()
 
-    // const data = { name: 'Jhon Doe', age: 30, city: 'New York' }
-    // res.writeHead(200, {"content-type": "application/json"})
-    // res.write(JSON.stringify(data))
-    // res.end()
-
-    if (req.url === '/') {
-        const htmlFile = fs.readFileSync('public/index.html', 'utf-8')
-
-        res.writeHead(200, { "content-type": 'text/html' })
-        res.write(htmlFile)
-        res.end()
-
-        return
-
-    }
-
-    if (req.url?.endsWith('.js')) {
-        res.writeHead(200, { 'content-type': 'application/javascript' })
-    } else if (req.url?.endsWith('.css')) {
-        res.writeHead(200, { "content-type": 'text/css' })
-    }
-
-    const responseContent = fs.readFileSync(`./public/${req.url}`, 'utf-8')
-    res.end(responseContent)
-
-})
-
-server.listen(8080, () => {
-    console.log('Server running on port 8080')
-})
+}
